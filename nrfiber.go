@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"errors"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/newrelic/go-agent/v3/newrelic"
@@ -48,6 +49,10 @@ func Middleware(app *newrelic.Application, configs ...*config) fiber.Handler {
 			}
 			if noticeErrorEnabled {
 				txn.NoticeError(err)
+			}
+		} else if statusCode >= 500 {
+			if noticeErrorEnabled {
+				txn.NoticeError(errors.New(fmt.Sprintf("%d", statusCode)))
 			}
 		}
 
