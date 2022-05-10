@@ -51,10 +51,8 @@ func Middleware(app *newrelic.Application, configs ...*config) fiber.Handler {
 			if noticeError {
 				txn.NoticeError(err)
 			}
-		} else if (
-			statusCode >= fiber.StatusInternalServerError
-			&& noticeInternalServerError
-		) {
+		} else if statusCode >= fiber.StatusInternalServerError && 
+			noticeInternalServerError {
 			txn.NoticeError(errors.New(fmt.Sprintf("%d", statusCode)))
 		}
 
